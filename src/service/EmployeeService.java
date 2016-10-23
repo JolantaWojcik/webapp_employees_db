@@ -14,8 +14,8 @@ import model.Employee;
 public class EmployeeService {
 	
 	public static List<Employee> queryEmployees(Connection conn) throws SQLException {
-		
-	      String sql = "Select a.name, a.surname, a.position, a.salary from employees a";
+		//czy employees
+	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	 
@@ -24,7 +24,7 @@ public class EmployeeService {
 	      while (rs.next()) {
 	          String name = rs.getString("name");
 	          String surname = rs.getString("surname");
-	          String position = rs.getString("surname");
+	          String position = rs.getString("position");
 	          int salary = rs.getInt("salary");
 	          Employee e = new Employee();
 	          e.setName(name);
@@ -36,16 +36,16 @@ public class EmployeeService {
 	      return list;
 	  }
 	 
-	  public static Employee findEmployee(Connection conn, String code) throws SQLException {
-	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a where a.code=?";
+	  public static Employee findEmployee(Connection conn, String name) throws SQLException {
+	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a where a.name=?";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
-	      pstm.setString(1, code);
+	      pstm.setString(1, name);
 	 
 	      ResultSet rs = pstm.executeQuery();
 	 
 	      while (rs.next()) {
-	          String name = rs.getString("name");
+	          name = rs.getString("name");
 	          String surname = rs.getString("surname");
 	          String position = rs.getString("position");
 	          int salary = rs.getInt("salary");
@@ -54,17 +54,6 @@ public class EmployeeService {
 	      }
 	      return null;
 	  }
-	 
-//	  public static void updateEmployees(Connection conn, Employee product) throws SQLException {
-//	      String sql = "Update Product set Name =?, Price=? where Code=? ";
-//	 
-//	      PreparedStatement pstm = conn.prepareStatement(sql);
-//	 
-//	      pstm.setString(1, product.getName());
-//	      pstm.setFloat(2, product.getPrice());
-//	      pstm.setString(3, product.getCode());
-//	      pstm.executeUpdate();
-//	  }
 	 
 	  public static void insertEmployee(Connection conn, Employee emp) throws SQLException {
 	      String sql = "Insert into Employee(name, surname, position, salary) values (?,?,?)";
@@ -91,8 +80,5 @@ public class EmployeeService {
 	 
 	}
 
-//	public void addEmployee(Employee employee) {
-//		DATABASE.add(employee);
-//	}
 
 

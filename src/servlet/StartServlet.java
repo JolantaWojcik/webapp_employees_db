@@ -47,9 +47,8 @@ public class StartServlet extends HttpServlet {
 	        // Store info in request attribute, before forward to views
 	        request.setAttribute("errorString", errorString);
 	        request.setAttribute("empsLis", list);
-	         
-	     
-	        // Forward to /WEB-INF/views/productListView.jsp
+	        
+	        // Forward to /WEB-INF/...
 	        RequestDispatcher dispatcher = request.getServletContext()
 	                .getRequestDispatcher("/WEB-INF/pages/mainForm.jsp");
 	        dispatcher.forward(request, response);
