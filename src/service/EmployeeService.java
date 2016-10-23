@@ -37,7 +37,7 @@ public class EmployeeService {
 	  }
 	 
 	  public static Employee findEmployee(Connection conn, String code) throws SQLException {
-	      String sql = "Select a.name, a.surname, a.position, a.salary from Product a where a.id=?";
+	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a where a.code=?";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	      pstm.setString(1, code);
@@ -80,7 +80,7 @@ public class EmployeeService {
 	  }
 	 
 	  public static void deleteProduct(Connection conn, String code) throws SQLException {
-	      String sql = "Delete Product where code= ?";
+	      String sql = "Delete Employee where code= ?";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	 
