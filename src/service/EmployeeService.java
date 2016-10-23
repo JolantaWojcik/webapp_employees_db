@@ -15,7 +15,7 @@ public class EmployeeService {
 	
 	public static List<Employee> queryEmployees(Connection conn) throws SQLException {
 		//czy employees
-	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a";
+	      String sql = "Select a.name, a.surname, a.position, a.salary from employees a";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	 
@@ -37,7 +37,7 @@ public class EmployeeService {
 	  }
 	 
 	  public static Employee findEmployee(Connection conn, String name) throws SQLException {
-	      String sql = "Select a.name, a.surname, a.position, a.salary from Employee a where a.name=?";
+	      String sql = "Select a.name, a.surname, a.position, a.salary from employees a where a.name=?";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	      pstm.setString(1, name);
@@ -56,7 +56,7 @@ public class EmployeeService {
 	  }
 	 
 	  public static void insertEmployee(Connection conn, Employee emp) throws SQLException {
-	      String sql = "Insert into Employee(name, surname, position, salary) values (?,?,?)";
+	      String sql = "Insert into employees(name, surname, position, salary) values (?,?,?)";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	 
@@ -69,7 +69,7 @@ public class EmployeeService {
 	  }
 	 
 	  public static void deleteProduct(Connection conn, String code) throws SQLException {
-	      String sql = "Delete Employee where code= ?";
+	      String sql = "Delete employees where code= ?";
 	 
 	      PreparedStatement pstm = conn.prepareStatement(sql);
 	 
