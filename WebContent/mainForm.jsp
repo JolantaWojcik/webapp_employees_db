@@ -14,7 +14,7 @@
 				<table style="margin-left: auto;">
 					<tr>
 						<td>Login</td>
-						<td><input type="text" name="login" />
+						<td><input type="text" name="username" />
 						<td>Haslo</td>
 						<td><input type="password" name="password" />
 						<td><input type="submit" value="zaloguj" /></td>

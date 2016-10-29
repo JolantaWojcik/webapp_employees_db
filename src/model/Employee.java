@@ -2,29 +2,27 @@ package model;
 
 public class Employee {
 
-	private static int GENERATOR = 0;
-
-	//private final int id;
+	private int id;
 	private String name;
 	private String surname;
 	private String position;
 	private int salary;
 
-	public Employee(String name, String surname, String position, int salary) {
+	public Employee(int id, String name, String surname, String position, int salary) {
 		this.name = name;
 		this.surname = surname;
 		this.position = position;
 		this.salary = salary;
-	//	this.id = GENERATOR++;
+		this.id = id;
+	}
+	public int getId() {
+		return id;
 	}
 
-	public Employee() {
-		// TODO Auto-generated constructor stub
+	public void setId(int id) {
+		this.id = id;
 	}
-//	public int getId() {
-//		return id;
-//	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -56,18 +54,17 @@ public class Employee {
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((position == null) ? 0 : position.hashCode());
 		result = prime * result + salary;
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -77,6 +74,8 @@ public class Employee {
 		if (getClass() != obj.getClass())
 			return false;
 		Employee other = (Employee) obj;
+		if (id != other.id)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -96,11 +95,10 @@ public class Employee {
 			return false;
 		return true;
 	}
-
 	@Override
 	public String toString() {
-		return "Employee [name=" + name + ", surname=" + surname + ", position=" + position + ", salary=" + salary
-				+ "]";
+		return "Employee [id=" + id + ", name=" + name + ", surname=" + surname + ", position=" + position + ", salary="
+				+ salary + "]";
 	}
 
 }

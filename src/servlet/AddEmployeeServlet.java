@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import beans.MyUtils;
+import connections.ConnectionUtils;
 import model.Employee;
 import service.EmployeeService;
 
@@ -22,30 +22,27 @@ public class AddEmployeeServlet extends HttpServlet {
        
 	private EmployeeService employeeService;
 
-	@Override
-	public void init() throws ServletException {
-		employeeService = new EmployeeService();
-	}
+//	@Override
+//	public void init() throws ServletException {
+//		employeeService = new EmployeeService();
+//	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 
-		Connection conn = MyUtils.getStoredConnection(request);
-		 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		ConnectionUtils cu = new ConnectionUtils();
+		Connection conn = null;
+		
 		try {
-			employeeService = new EmployeeService();
+			conn = cu.connection();
+			new EmployeeService(conn, request)
+					.insertEmployee(new Employee(-1, request.getParameter("name"), request.getParameter("surname"),
+							request.getParameter("position"), Integer.parseInt(request.getParameter("salary"))));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		String name = request.getParameter("name");
-//		String surname = request.getParameter("surname");
-//		String position = request.getParameter("position");
-//		int salary = Integer.parseInt(request.getParameter("salary"));
-		
-		//employeeService.addEmployee(new Employee(name, surname, position, salary));
-		
-		response.sendRedirect("/webapp04/");
-	}
 
+		response.sendRedirect("/webapp04/employees");
+	}
+	
 }

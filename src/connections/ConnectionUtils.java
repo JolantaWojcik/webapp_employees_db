@@ -3,24 +3,20 @@ package connections;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionUtils {
-	public static Connection getConnection()
-            throws ClassNotFoundException, SQLException {
-  
-       return MySQLConnUtils.getMySQLConnection();
-  }
-   
-  public static void closeQuietly(Connection conn) {
-      try {
-          conn.close();
-      } catch (Exception e) {
-      }
-  }
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
-  public static void rollbackQuietly(Connection conn) {
-      try {
-          conn.rollback();
-      } catch (Exception e) {
-      }
-  }
+public class ConnectionUtils {
+	
+	public Connection connection() throws Exception {
+		Connection conn;
+		Context init = new InitialContext();
+		Context contx = (Context) init.lookup("java:comp/env");
+		DataSource dataSource = (DataSource) contx.lookup("jdbc/data");
+		synchronized (dataSource) {
+			conn = dataSource.getConnection();
+		}
+		return conn;
+	}
 }

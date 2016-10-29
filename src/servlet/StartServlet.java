@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.naming.Context;
@@ -15,9 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import beans.MyUtils;
+import connections.ConnectionUtils;
 import model.Employee;
 import service.EmployeeService;
+
 
 @WebServlet("/")
 public class StartServlet extends HttpServlet {
@@ -25,32 +27,21 @@ public class StartServlet extends HttpServlet {
 
 	private EmployeeService employeeService;
 
-	@Override
-	public void init() throws ServletException {
-		employeeService = new EmployeeService();
-	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		  Connection conn = MyUtils.getStoredConnection(request);
-		  
-	        String errorString = null;
-	        List<Employee> list = null;
-	        try {
-	            list = employeeService.queryEmployees(conn);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            errorString = e.getMessage();
-	        }
-	   
-	        // Store info in request attribute, before forward to views
-	        request.setAttribute("errorString", errorString);
-	        request.setAttribute("empsLis", list);
-	        
-	        // Forward to /WEB-INF/...
-	        RequestDispatcher dispatcher = request.getServletContext()
-	                .getRequestDispatcher("/WEB-INF/pages/mainForm.jsp");
-	        dispatcher.forward(request, response);
+		ConnectionUtils cu = new ConnectionUtils();
+		Connection conn = null;
+		
+		try {
+			 conn = cu.connection();
+			request.setAttribute("empsList", new EmployeeService(conn, request).queryEmployees());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher rd = request.getRequestDispatcher("mainForm.jsp");
+		rd.forward(request, response);
 	}
+	
 }

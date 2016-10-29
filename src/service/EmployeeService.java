@@ -13,69 +13,71 @@ import model.Employee;
 
 public class EmployeeService {
 	
-	public static List<Employee> queryEmployees(Connection conn) throws SQLException {
-		//czy employees
-	      String sql = "Select a.name, a.surname, a.position, a.salary from employees a";
+	private static Connection connection;
+	private HttpServletRequest request;
+
+	public EmployeeService(Connection connection, HttpServletRequest request) {
+		this.connection = connection;
+		this.request = request;
+	}
+	
+	public static List<Employee> queryEmployees() throws SQLException {
+		StringBuilder query = new StringBuilder("select * from employees");
+
+		PreparedStatement pstm = connection.prepareStatement(query.toString());
+
+		ResultSet rs = pstm.executeQuery();
+		List<Employee> list = new ArrayList<Employee>();
+		while (rs.next()) {
+			int id = rs.getInt("id");
+			String name = rs.getString("name");
+			String surname = rs.getString("surname");
+			String position = rs.getString("position");
+			int salary = rs.getInt("salary");
+			Employee e = new Employee(id, name, surname, position, salary);
+			e.setName(name);
+			e.setSurname(surname);
+			e.setPosition(position);
+			e.setSalary(salary);
+			list.add(e);
+		}
+
+		rs.close();
+		pstm.close();
+		connection.close();
+		return list;
+	  }
+
 	 
-	      PreparedStatement pstm = conn.prepareStatement(sql);
-	 
-	      ResultSet rs = pstm.executeQuery();
-	      List<Employee> list = new ArrayList<Employee>();
-	      while (rs.next()) {
-	          String name = rs.getString("name");
-	          String surname = rs.getString("surname");
-	          String position = rs.getString("position");
-	          int salary = rs.getInt("salary");
-	          Employee e = new Employee();
-	          e.setName(name);
-	          e.setSurname(surname);
-	          e.setPosition(position);
-	          e.setSalary(salary);
-	          list.add(e);
-	      }
-	      return list;
+	  public static void insertEmployee(Employee emp) throws SQLException {
+		  PreparedStatement pstm = connection.prepareStatement(
+				  "insert into employees(name, surname, position, salary) values (?,?,?,?)",
+				  PreparedStatement.RETURN_GENERATED_KEYS);
+
+		  pstm.setString(1, emp.getName());
+		  pstm.setString(2, emp.getSurname());
+		  pstm.setString(3, emp.getPosition());
+		  pstm.setInt(4, emp.getSalary());
+
+		  pstm.executeQuery();
+
+		  ResultSet rs = pstm.getGeneratedKeys();
+		  if (rs.next()) {
+			  emp.setId(rs.getInt("id"));
+		  }
+		  rs.close();
+		  pstm.close();
 	  }
 	 
-	  public static Employee findEmployee(Connection conn, String name) throws SQLException {
-	      String sql = "Select a.name, a.surname, a.position, a.salary from employees a where a.name=?";
-	 
-	      PreparedStatement pstm = conn.prepareStatement(sql);
-	      pstm.setString(1, name);
-	 
-	      ResultSet rs = pstm.executeQuery();
-	 
-	      while (rs.next()) {
-	          name = rs.getString("name");
-	          String surname = rs.getString("surname");
-	          String position = rs.getString("position");
-	          int salary = rs.getInt("salary");
-	          Employee e = new Employee(name, surname, position, salary);
-	          return e;
-	      }
-	      return null;
-	  }
-	 
-	  public static void insertEmployee(Connection conn, Employee emp) throws SQLException {
-	      String sql = "Insert into employees(name, surname, position, salary) values (?,?,?)";
-	 
-	      PreparedStatement pstm = conn.prepareStatement(sql);
-	 
-	      pstm.setString(1, emp.getName());
-	      pstm.setString(2, emp.getSurname());
-	      pstm.setString(3, emp.getPosition());
-	      pstm.setInt(4, emp.getSalary());
-	 
-	      pstm.executeUpdate();
-	  }
-	 
-	  public static void deleteProduct(Connection conn, String code) throws SQLException {
-	      String sql = "Delete employees where code= ?";
-	 
-	      PreparedStatement pstm = conn.prepareStatement(sql);
-	 
-	      pstm.setString(1, code);
-	 
-	      pstm.executeUpdate();
+	  public static void deleteEmployee(Employee emp) throws SQLException {
+	      StringBuilder query = new StringBuilder("delete from employees where id= ?");
+	      PreparedStatement pstm = connection.prepareStatement(query.toString());
+	      pstm.setInt(1, emp.getId());
+
+		  ResultSet rs = pstm.executeQuery();
+		 
+		  rs.close();
+		  pstm.close();
 	  }
 	 
 	}
